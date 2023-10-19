@@ -26,9 +26,18 @@ public class HelloApplication extends Application {
 
 
         int port = 21;
+//        String hostname = "185.27.134.11";
+//        String username = "if0_35263036";
+//        String password = "8BCLZnYQpb1yLaC";
+
         String hostname = "127.0.0.1";
+        String username = "admin";
+        String password = "admin";
+
 
         try {
+
+
             client.connect(hostname, port);
 
             int replyCode = client.getReplyCode();
@@ -39,7 +48,7 @@ public class HelloApplication extends Application {
             }
 
 
-            boolean logedin = client.login("admin", "admin");
+            boolean logedin = client.login(username, password);
             //showServerReply(client);
             if (!logedin) {
                 System.out.println("Failed to login");
@@ -48,11 +57,26 @@ public class HelloApplication extends Application {
             }
             client.isConnected();
 
+            System.out.println(client.printWorkingDirectory());
+            client.makeDirectory("/new_dir");
 
             FTPFile[] files = client.listFiles("/");
             for (FTPFile file :
                     files) {
+                if(file.isDirectory()){
+                    System.out.println("-------------------------");
+                    System.out.println("Dir: " + file.getName());
+                    System.out.println("->");
+                    FTPFile[] files2 = client.listFiles("/" + file.getName());
+                    for (FTPFile file2 :
+                            files2) {
+                        System.out.println(file2.getName());
+                    }
+                    System.out.println("-------------------------");
+                }else{
+
                 System.out.println(file.getName());
+                }
             }
 
 
@@ -68,7 +92,7 @@ public class HelloApplication extends Application {
 
         }
         catch (IOException e) {
-
+            System.out.println("chyba pico - fixnout");
         }
 
 
