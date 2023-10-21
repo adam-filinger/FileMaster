@@ -48,11 +48,15 @@ public class HelloController {
                 System.exit(1);
             }
 
+            text_area.setText("Connected to: " + host + "\n");
+
             boolean logedin = ftp.login(username_text, password_text);
 
             if (!logedin) {
+                text_area.appendText("Login failed!\n");
                 System.out.println("Failed to login");
             } else {
+                text_area.appendText("Successfully loged in as: " + username_text + "\n");
                 System.out.println("Successfully loged in");
             }
             ftp.isConnected();
@@ -66,8 +70,8 @@ public class HelloController {
             for (FTPFile file :
                     files) {
                 text = text + file.getName() + "\n";
-                text_area.setText(text);
             }
+                text_area.appendText(text);
 
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -79,10 +83,12 @@ public class HelloController {
         try {
             ftp.disconnect();
 
+            text_area.clear();
+            text_area.setText("Disconnected from: " + ip_address.getText());
             username.clear();
             password.clear();
             ip_address.clear();
-            text_area.clear();
+            disconnect.setVisible(false);
 
             System.out.println("Disconnected");
         } catch (IOException e) {
