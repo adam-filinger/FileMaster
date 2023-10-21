@@ -1,16 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.effect.*?>
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.VBox?>
-
 <?import javafx.scene.control.Button?>
-<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.example.filemaster.HelloController">
-    <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
-    </padding>
 
-    <Label fx:id="welcomeText"/>
-    <Button text="Hello!" onAction="#onHelloButtonClick"/>
+<VBox alignment="CENTER" prefHeight="600.0" prefWidth="800.0" spacing="20.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.filemaster.HelloController">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+    </padding>
+   <children>
+      <SplitPane dividerPositions="0.5" orientation="VERTICAL" VBox.vgrow="ALWAYS">
+        <items>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+               <children>
+                  <Label fx:id="ip_address_label" layoutX="329.0" layoutY="26.0" text="IP address" />
+                  <TextField fx:id="ip_address" layoutX="275.0" layoutY="59.0" text="127.0.0.1" />
+                   <Label fx:id="username_label" layoutX="328.0" layoutY="101.0" text="Username" />
+                  <TextField fx:id="username" layoutX="275.0" layoutY="124.0" text="admin" />
+                  <Label fx:id="password_label" layoutX="329.0" layoutY="159.0" text="Password" />
+                  <PasswordField fx:id="password" layoutX="275.0" layoutY="187.0" text="admin" />
+                  <Button fx:id="connect" layoutX="616.0" layoutY="199.0" mnemonicParsing="false" onAction="#onConnect" text="Connect" />
+                  <Button fx:id="disconnect" layoutX="51.0" layoutY="199.0" mnemonicParsing="false" onAction="#onDisconnect" text="Disconnect" visible="false" />
+               </children>
+            </AnchorPane>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+               <children>
+                  <TextArea fx:id="text_area" layoutX="18.0" layoutY="11.0" />
+               </children></AnchorPane>
+        </items>
+      </SplitPane>
+   </children>
 </VBox>
