@@ -18,7 +18,7 @@
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                <children>
                   <Label fx:id="ip_address_label" layoutX="329.0" layoutY="26.0" text="IP address" />
-                  <TextField fx:id="ip_address" layoutX="275.0" layoutY="59.0" text="185.27.134.11" />
+                  <TextField fx:id="ip_address" layoutX="275.0" layoutY="59.0" text="#" />
                    <Label fx:id="username_label" layoutX="328.0" layoutY="101.0" text="Username" />
                   <TextField fx:id="username" layoutX="275.0" layoutY="124.0" text="if0_35263036" />
                   <Label fx:id="password_label" layoutX="329.0" layoutY="159.0" text="Password" />

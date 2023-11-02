@@ -1,26 +1,23 @@
 package com.example.filemaster;
 
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.SubScene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Popup;
 import javafx.stage.Stage;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
 
 import java.io.*;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 public class HelloController {
 
-    @FXML
-    private VBox vBox;
     @FXML
     private TextField username;
 
@@ -36,8 +33,10 @@ public class HelloController {
     private ListView list_view;
     @FXML
     private Label ftp_file_disp;
-    @FXML
-    private Popup select_conn;
+
+    protected static String address;
+    protected static String UNAME;
+    protected static String PWD;
 
     FTPClient ftp = new FTPClient();
 
@@ -47,8 +46,6 @@ public class HelloController {
 
     @FXML
     protected void onConnect() {
-
-
         String username_text = username.getText();
         String password_text = password.getText();
         String host = ip_address.getText();
@@ -88,7 +85,7 @@ public class HelloController {
             ArrayList<String> files_list = new ArrayList<>();
             for (FTPFile file :
                     files) {
-                files_list.add(file.getName() + "");
+                files_list.add(file.getName());
             }
             list_view.getItems().addAll(files_list);
 
@@ -118,17 +115,21 @@ public class HelloController {
     }
 
     @FXML
-    protected void select_conn_button() throws IOException {
+    protected void select_conn_button() throws IOException{
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("select_conn.fxml"));
         Stage select_conn = new Stage();
-        Scene scene = new Scene(fxmlLoader.load(), 1000, 600);
+        Scene scene = new Scene(fxmlLoader.load(), 1000, 500);
         select_conn.getIcons().add(new Image(HelloApplication.class.getResource("567300e6d49142bd910935d0201d6f98.png").openStream()));
         select_conn.setScene(scene);
         select_conn.setTitle("Select your connection");
         select_conn.setHeight(500);
         select_conn.setWidth(500);
         select_conn.show();
-
+        select_conn.setOnHiding(windowEvent -> {
+            ip_address.setText(address);
+            username.setText(UNAME);
+            password.setText(PWD);
+        });
 
 
     }
