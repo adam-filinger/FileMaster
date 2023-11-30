@@ -5,19 +5,16 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
-import javafx.stage.DirectoryChooser;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
-import javafx.stage.Window;
+import javafx.stage.*;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
+import org.apache.commons.net.ftp.FTPFileListParser;
 import org.apache.commons.net.ftp.FTPReply;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 
-public class HelloController {
+public class MainController {
 
     @FXML
     private TextField username;
@@ -48,11 +45,11 @@ public class HelloController {
     protected static String address;
     protected static String UNAME;
     protected static String PWD;
-    protected static FTPFile[] files;
+    protected static ArrayList<FTPFile> files = new ArrayList<>();
 
     FTPClient ftp = new FTPClient();
 
-    public HelloController() {
+    public MainController() {
     }
 
 
@@ -109,17 +106,19 @@ public class HelloController {
     @FXML
     protected void show_files(){
         try {
-            files = ftp.listFiles(ftp.printWorkingDirectory());
+            for (FTPFile file :
+                    ftp.listFiles(ftp.printWorkingDirectory())) {
+                if(!file.getName().equals(".")){
+                    files.add(file);
+                } else if(!file.getName().equals("..")){
+                    files.add(file);
+                }
+            }
+
             for (FTPFile file :
                     files) {
                 if(file.isDirectory()){
-                    if(file.getName().equals("..")){
-                        continue;
-                    }
-                    if(file.getName().equals(".")){
-                        continue;
-                    }
-                    list_view.getItems().add(file.getName() + "(dir)");
+                    list_view.getItems().add(file.getName() + " (dir)");
                 }else{
                     list_view.getItems().add(file.getName());
                 }
@@ -138,6 +137,7 @@ public class HelloController {
 
             text_area.clear();
             text_area.setText("Disconnected from: " + ip_address.getText());
+            ftp_file_disp.setText("");
             username.clear();
             password.clear();
             ip_address.clear();
@@ -148,6 +148,7 @@ public class HelloController {
             open_dir_button.setDisable(true);
             previous_dir_button.setDisable(true);
             list_view.getItems().clear();
+            files.clear();
 
 
             System.out.println("Disconnected");
@@ -158,10 +159,11 @@ public class HelloController {
 
     @FXML
     protected void select_conn_button() throws IOException{
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("select_conn.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(FileMaster.class.getResource("select_conn.fxml"));
         Stage select_conn = new Stage();
         Scene scene = new Scene(fxmlLoader.load(), 1000, 500);
-        select_conn.getIcons().add(new Image(HelloApplication.class.getResource("567300e6d49142bd910935d0201d6f98.png").openStream()));
+        select_conn.getIcons().add
+                (new Image(FileMaster.class.getResource("567300e6d49142bd910935d0201d6f98.png").openStream()));
         select_conn.setScene(scene);
         select_conn.setTitle("Select your connection");
         select_conn.setHeight(500);
@@ -183,7 +185,7 @@ public class HelloController {
 
     protected FTPFile getSelectedFileFromList(){
         int index = list_view.getSelectionModel().getSelectedIndex();
-        FTPFile selected_file = files[index + 2];
+        FTPFile selected_file = files.get(index);
         if(selected_file.isDirectory()){
             if(open_dir_button.isDisabled()){
                 open_dir_button.setDisable(false);
@@ -225,7 +227,9 @@ public class HelloController {
             }
 
         } catch (FileNotFoundException e) {
+
             e.printStackTrace();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -254,6 +258,7 @@ public class HelloController {
             String dir_name = getSelectedFileFromList().getName();
             if(ftp.changeWorkingDirectory(dir_name)){
                 list_view.getItems().clear();
+                files.clear();
                 show_files();
                 if(previous_dir_button.isDisabled()){
                     previous_dir_button.setDisable(false);
@@ -277,6 +282,7 @@ public class HelloController {
                     previous_dir_button.setDisable(true);
                 }
                 list_view.getItems().clear();
+                files.clear();
                 show_files();
             }else{
                 text_area.appendText("Couldn't change directory, please try again");

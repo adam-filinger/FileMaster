@@ -1,6 +1,5 @@
 package com.example.filemaster;
 
-import javafx.css.converter.LadderConverter;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
@@ -10,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class SelectConn {
+public class SelectConnController {
 
     @FXML
     private ListView select_conn_list;
@@ -25,10 +24,10 @@ public class SelectConn {
     private Button select_conn_create_button;
 
     ArrayList<List<String>> records = new ArrayList<>();
-    public SelectConn() throws URISyntaxException {
+    public SelectConnController() throws URISyntaxException {
 
 
-        try (BufferedReader br = new BufferedReader(new FileReader(new File(HelloApplication.class.getResource("ftp_conn_saved.csv").toURI())))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(new File(FileMaster.class.getResource("ftp_conn_saved.csv").toURI())))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(";");
@@ -46,11 +45,11 @@ public class SelectConn {
         for (List<String> temp :
                 records) {
             if(temp.contains(host)) {
-                HelloController.address = temp.get(1);
+                MainController.address = temp.get(1);
                 System.out.println(temp.get(1));
-                HelloController.UNAME = temp.get(2);
+                MainController.UNAME = temp.get(2);
                 System.out.println(temp.get(2));
-                HelloController.PWD = temp.get(3);
+                MainController.PWD = temp.get(3);
                 System.out.println(temp.get(3));
                 break;
 
