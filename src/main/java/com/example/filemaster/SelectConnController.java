@@ -1,15 +1,18 @@
 package com.example.filemaster;
 
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
-import java.io.*;
-import java.net.URISyntaxException;
+import javafx.stage.Stage;
+import javafx.stage.Window;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-public class SelectConnController {
+public class SelectConnController{
+
+    protected static int done = 0;
 
     @FXML
     private ListView select_conn_list;
@@ -24,38 +27,26 @@ public class SelectConnController {
     private Button select_conn_create_button;
 
     ArrayList<List<String>> records = new ArrayList<>();
-    public SelectConnController() throws URISyntaxException {
 
+    public SelectConnController(){
 
-        try (BufferedReader br = new BufferedReader(new FileReader(new File(FileMaster.class.getResource("ftp_conn_saved.csv").toURI())))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] values = line.split(";");
-                records.add(Arrays.asList(values));
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        records = MainController.records;
 
     }
 
+
     @FXML
     protected void select_conn(){
-        String host = select_conn_list.getSelectionModel().getSelectedItem().toString();
-        for (List<String> temp :
-                records) {
-            if(temp.contains(host)) {
-                MainController.address = temp.get(1);
-                System.out.println(temp.get(1));
-                MainController.UNAME = temp.get(2);
-                System.out.println(temp.get(2));
-                MainController.PWD = temp.get(3);
-                System.out.println(temp.get(3));
-                break;
+        int selectedIndex = select_conn_list.getSelectionModel().getSelectedIndex() + 1;
+        List<String> selectedHost = records.get(selectedIndex);
+        MainController.address = selectedHost.get(1);
+        MainController.UNAME = selectedHost.get(2);
+        MainController.PWD = selectedHost.get(3);
+        Stage stage =(Stage)select_conn_list.getScene().getWindow();
+        done = 1;
+        stage.close();
 
-            }
 
-        }
     }
 
 

@@ -12,7 +12,13 @@ import org.apache.commons.net.ftp.FTPFileListParser;
 import org.apache.commons.net.ftp.FTPReply;
 
 import java.io.*;
+import java.lang.invoke.ConstantCallSite;
+import java.lang.reflect.Method;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
 public class MainController {
 
@@ -46,6 +52,7 @@ public class MainController {
     protected static String UNAME;
     protected static String PWD;
     protected static ArrayList<FTPFile> files = new ArrayList<>();
+    protected static ArrayList records = new ArrayList<>();
 
     FTPClient ftp = new FTPClient();
 
@@ -55,36 +62,40 @@ public class MainController {
 
     @FXML
     protected void onConnect() {
-        String username_text = username.getText();
-        String password_text = password.getText();
-        String host = ip_address.getText();
 
-        if(host.isEmpty()){
+        if(address.isEmpty() || address == null){
+            UNAME = username.getText();
+            PWD = password.getText();
+            address = ip_address.getText();
+        }
+
+
+        if(address.isEmpty() || address == null){
             text_area.appendText("No host, please type or select host to connect to! \n");
             return;
         }
 
         try {
-            ftp.connect(host, 21);
+            ftp.connect(address, 21);
 
             int replyCode = ftp.getReplyCode();
             if (!FTPReply.isPositiveCompletion(replyCode)) {
                 ftp.disconnect();
-                System.out.println("Failed to connect to: " + host);
+                System.out.println("Failed to connect to: " + address);
                 System.exit(1);
             }
 
-            text_area.setText("Connected to: " + host + "\n");
+            text_area.setText("Connected to: " + address + "\n");
             connect.setDisable(true);
             upload_button.setDisable(false);
 
-            boolean logedin = ftp.login(username_text, password_text);
+            boolean logedin = ftp.login(UNAME, PWD);
 
             if (!logedin) {
                 text_area.appendText("Login failed!\n");
                 System.out.println("Failed to login");
             } else {
-                text_area.appendText("Successfully logedin as: " + username_text + "\n");
+                text_area.appendText("Successfully logedin as: " + UNAME + "\n");
                 System.out.println("Successfully logedin");
             }
 
@@ -136,7 +147,7 @@ public class MainController {
             ftp.disconnect();
 
             text_area.clear();
-            text_area.setText("Disconnected from: " + ip_address.getText());
+            text_area.setText("Disconnected from: " + address);
             ftp_file_disp.setText("");
             username.clear();
             password.clear();
@@ -149,6 +160,9 @@ public class MainController {
             previous_dir_button.setDisable(true);
             list_view.getItems().clear();
             files.clear();
+            UNAME = null;
+            PWD = null;
+            address = null;
 
 
             System.out.println("Disconnected");
@@ -159,24 +173,48 @@ public class MainController {
 
     @FXML
     protected void select_conn_button() throws IOException{
+        records = load_records();
+
         FXMLLoader fxmlLoader = new FXMLLoader(FileMaster.class.getResource("select_conn.fxml"));
+
         Stage select_conn = new Stage();
         Scene scene = new Scene(fxmlLoader.load(), 1000, 500);
         select_conn.getIcons().add
-                (new Image(FileMaster.class.getResource("567300e6d49142bd910935d0201d6f98.png").openStream()));
+                (new Image(Objects.requireNonNull(FileMaster.class.
+                        getResource("567300e6d49142bd910935d0201d6f98.png")).openStream()));
         select_conn.setScene(scene);
         select_conn.setTitle("Select your connection");
         select_conn.setHeight(500);
         select_conn.setWidth(500);
         select_conn.show();
         select_conn.setOnHiding(windowEvent -> {
-            ip_address.setText(address);
-            username.setText(UNAME);
-            password.setText(PWD);
+            if(SelectConnController.done == 1){
+                onConnect();
+            }
         });
 
 
+
     }
+
+    protected ArrayList load_records(){
+        ArrayList<List<String>> records = new ArrayList<>();
+
+        try (BufferedReader br = new BufferedReader(new FileReader(new File(Objects.requireNonNull(FileMaster.class.
+                getResource("ftp_conn_saved.csv")).toURI())))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] values = line.split(";");
+                records.add(Arrays.asList(values));
+            }
+        } catch (IOException | URISyntaxException e) {
+            e.printStackTrace();
+        }
+
+
+        return records;
+    }
+
     @FXML
     protected void showFileName(){
         FTPFile file = getSelectedFileFromList();
