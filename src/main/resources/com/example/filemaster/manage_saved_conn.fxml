@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="500.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.filemaster.ManageSavedConnController">
+   <children>
+      <Label layoutX="189.0" layoutY="116.0" text="FTP server address" />
+      <Label layoutX="217.0" layoutY="173.0" text="Username" />
+      <Label layoutX="219.0" layoutY="243.0" text="Password" />
+      <TextField fx:id="address" layoutX="157.0" layoutY="137.0" />
+      <TextField fx:id="UNAME" layoutX="157.0" layoutY="201.0" />
+      <PasswordField fx:id="PWD" layoutX="157.0" layoutY="291.0" />
+      <Button fx:id="save" layoutX="225.0" layoutY="353.0" mnemonicParsing="false" onAction="#make" text="Save" />
+      <Label layoutX="97.0" layoutY="264.0" text="Note: the password is stored in plain text form" />
+      <TextField fx:id="conn_name" layoutX="157.0" layoutY="75.0" />
+      <Label layoutX="192.0" layoutY="46.0" text="Connection name" />
+   </children>
+</AnchorPane>

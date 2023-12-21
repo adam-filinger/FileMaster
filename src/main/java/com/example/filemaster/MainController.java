@@ -200,14 +200,14 @@ public class MainController {
     protected ArrayList load_records(){
         ArrayList<List<String>> records = new ArrayList<>();
 
-        try (BufferedReader br = new BufferedReader(new FileReader(new File(Objects.requireNonNull(FileMaster.class.
-                getResource("ftp_conn_saved.csv")).toURI())))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(
+                "src/main/resources/com/example/filemaster/ftp_conn_saved.csv"))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(";");
                 records.add(Arrays.asList(values));
             }
-        } catch (IOException | URISyntaxException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
