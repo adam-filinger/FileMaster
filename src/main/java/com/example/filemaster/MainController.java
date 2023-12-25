@@ -8,16 +8,10 @@ import javafx.scene.image.Image;
 import javafx.stage.*;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
-import org.apache.commons.net.ftp.FTPFileListParser;
 import org.apache.commons.net.ftp.FTPReply;
 
 import java.io.*;
-import java.lang.invoke.ConstantCallSite;
-import java.lang.reflect.Method;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 
 public class MainController {
@@ -48,12 +42,11 @@ public class MainController {
     @FXML
     private Label ftp_file_disp;
 
-    protected static String address;
+    protected static String address = "";
     protected static String UNAME;
     protected static String PWD;
+    protected static boolean is_conn_selected = false;
     protected static ArrayList<FTPFile> files = new ArrayList<>();
-    protected static ArrayList records = new ArrayList<>();
-
     FTPClient ftp = new FTPClient();
 
     public MainController() {
@@ -63,14 +56,14 @@ public class MainController {
     @FXML
     protected void onConnect() {
 
-        if(address.isEmpty() || address == null){
+        if(!is_conn_selected){
             UNAME = username.getText();
             PWD = password.getText();
             address = ip_address.getText();
         }
 
 
-        if(address.isEmpty() || address == null){
+        if(address.isEmpty()){
             text_area.appendText("No host, please type or select host to connect to! \n");
             return;
         }
@@ -163,6 +156,7 @@ public class MainController {
             UNAME = null;
             PWD = null;
             address = null;
+            is_conn_selected = false;
 
 
             System.out.println("Disconnected");
@@ -173,7 +167,6 @@ public class MainController {
 
     @FXML
     protected void select_conn_button() throws IOException{
-        records = load_records();
 
         FXMLLoader fxmlLoader = new FXMLLoader(FileMaster.class.getResource("select_conn.fxml"));
 
@@ -188,37 +181,16 @@ public class MainController {
         select_conn.setWidth(500);
         select_conn.show();
         select_conn.setOnHiding(windowEvent -> {
-            if(SelectConnController.done == 1){
-                onConnect();
+            if(is_conn_selected){
+                ip_address.setText(address);
+                username.setText(UNAME);
+                password.setText(PWD);
             }
+
+
         });
 
 
-
-    }
-
-    protected ArrayList load_records(){
-        ArrayList<List<String>> records = new ArrayList<>();
-
-        try (BufferedReader br = new BufferedReader(new FileReader(
-                "src/main/resources/com/example/filemaster/ftp_conn_saved.csv"))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] values = line.split(";");
-                records.add(Arrays.asList(values));
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-        return records;
-    }
-
-    @FXML
-    protected void showFileName(){
-        FTPFile file = getSelectedFileFromList();
-        ftp_file_disp.setText(file.getName());
     }
 
     protected FTPFile getSelectedFileFromList(){

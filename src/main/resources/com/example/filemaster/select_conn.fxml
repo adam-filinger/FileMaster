@@ -10,6 +10,4 @@
            prefHeight="25.0" prefWidth="59.0" text="Select"/>
    <Button fx:id="select_conn_create_button" layoutX="359.0" layoutY="102.0" mnemonicParsing="false" prefHeight="25.0"
            prefWidth="59.0" text="Create" onAction="#new_conn"/>
-   <Button fx:id="select_conn_load_button" layoutX="359.0" layoutY="142.0" mnemonicParsing="false"
-           onAction="#populate_list" prefHeight="25.0" prefWidth="59.0" text="Load"/>
 </AnchorPane>

@@ -8,8 +8,7 @@ import com.opencsv.CSVWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.Objects;
+
 
 public class ManageSavedConnController {
 
@@ -21,12 +20,9 @@ public class ManageSavedConnController {
     private TextField PWD;
     @FXML
     private TextField conn_name;
-    @FXML
-    private Button save;
-
 
     @FXML
-    private void make() throws URISyntaxException {
+    private void make(){
 
         File f = new File("src/main/resources/com/example/filemaster/ftp_conn_saved.csv");
 
@@ -44,6 +40,7 @@ public class ManageSavedConnController {
             CSVWriter writer = new CSVWriter(fw, ';', CSVWriter.NO_QUOTE_CHARACTER, CSVWriter.DEFAULT_LINE_END);
 
             String[] data = {conn_name.getText(), address.getText(), UNAME.getText(), PWD.getText()};
+
 
             writer.writeNext(data);
             writer.close();

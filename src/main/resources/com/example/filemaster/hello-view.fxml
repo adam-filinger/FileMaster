@@ -45,7 +45,7 @@
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                <children>
                   <TextArea fx:id="text_area" editable="false" layoutX="523.0" layoutY="19.0" prefHeight="168.0" prefWidth="217.0" />
-                  <ListView fx:id="list_view" layoutX="35.0" layoutY="19.0" onMouseClicked="#showFileName" prefHeight="239.0" prefWidth="484.0" />
+                  <ListView fx:id="list_view" layoutX="35.0" layoutY="19.0" prefHeight="239.0" prefWidth="484.0" />
                   <Label fx:id="ftp_file_disp" layoutX="519.0" layoutY="198.0" prefHeight="17.0" prefWidth="225.0" />
                </children></AnchorPane>
         </items>
